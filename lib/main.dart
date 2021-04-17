@@ -1,21 +1,10 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(
-    Center(
-      child: Text(
-        "Hello, my name is Bo",
-        style: TextStyle(fontSize: 30),
-        textDirection: TextDirection.ltr,
-      ),
-    ),
-  );
-}
+import 'MyApp.dart';
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
-  }
+void main() {
+  runApp(MyApp(
+    name: 'Bo',
+    age: 4,
+  ));
 }
