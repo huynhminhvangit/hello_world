@@ -29,11 +29,12 @@ class TransactionList extends StatelessWidget {
                   children: [
                     Padding(padding: EdgeInsets.only(top: 10)),
                     Text(
-                      transactions[index].content.toUpperCase(),
+                      transactions[index].content,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
                         color: Colors.white,
+                        fontFamily: 'Playfair Display',
                       ),
                     ),
                     Text(

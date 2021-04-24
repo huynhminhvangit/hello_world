@@ -29,6 +29,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         tooltip: 'Add transaction',
         child: Icon(Icons.add),
         onPressed: this._onButtonShowModalSheet,
+        backgroundColor: Theme.of(context).primaryColor,
       ),
       body: SafeArea(
         child: Container(
@@ -105,7 +106,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                           child: Text('Save'),
                           style: TextButton.styleFrom(
                             primary: Colors.white,
-                            backgroundColor: Colors.blueAccent,
+                            backgroundColor: Theme.of(context).primaryColor,
                           ),
                         ),
                       ),
@@ -118,7 +119,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                           child: Text('Cancel'),
                           style: TextButton.styleFrom(
                             primary: Colors.white,
-                            backgroundColor: Colors.pinkAccent,
+                            backgroundColor: Theme.of(context).accentColor,
                           ),
                         ),
                       ),
