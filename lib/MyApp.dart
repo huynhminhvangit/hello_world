@@ -15,7 +15,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   final _contentEditingController = new TextEditingController();
   final _amountEditingController = new TextEditingController();
 
-  Transaction _transaction = Transaction(content: '', amount: 0.0);
+  Transaction _transaction =
+      Transaction(content: '', amount: 0.0, createdAt: DateTime.now());
 
   List<Transaction> _transactions = <Transaction>[];
 
@@ -27,6 +28,17 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       home: Scaffold(
         appBar: AppBar(
           title: Text("BoBon"),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.add),
+              onPressed: this._save,
+            )
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          tooltip: 'Add transaction',
+          child: Icon(Icons.add),
+          onPressed: this._save,
         ),
         body: SafeArea(
             minimum: EdgeInsets.only(left: 20, right: 20),
@@ -56,33 +68,52 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                       });
                     },
                   ),
-                  TextButton(
-                    onPressed: () {
-                      setState(() {
-                        _transactions.add(_transaction);
-                        _transaction = Transaction(content: '', amount: 0.0);
-                        _contentEditingController.text = '';
-                        _amountEditingController.text = '';
-                      });
-
-                      final snackbar = SnackBar(
-                        content: Text('Saved successfully'),
-                        action: SnackBarAction(
-                          label: 'Undo',
-                          onPressed: () {
-                            // Some code to undo the change.
-                          },
-                        ),
-                      );
-                      _globalKey.currentState!.showSnackBar(snackbar);
-                    },
-                    child: Text('Save'),
-                  ),
+                  Padding(padding: EdgeInsets.symmetric(vertical: 10)),
                   TransactionList(transactions: _transactions)
                 ],
               ),
             )),
       ),
     );
+  }
+
+  void _save() {
+    final result = this._addTransaction();
+    if (!result) {
+      this._showMessage('Input invalid');
+      return;
+    }
+    this._showMessage('Saved successfully', isUndo: true);
+  }
+
+  bool _addTransaction() {
+    if (_transaction.content.isEmpty ||
+        _transaction.amount == 0.0 ||
+        _transaction.amount.isNaN) return false;
+
+    setState(() {
+      _transaction.createdAt = DateTime.now();
+      _transactions.add(_transaction);
+      _transaction =
+          Transaction(content: '', amount: 0.0, createdAt: DateTime.now());
+      _contentEditingController.text = '';
+      _amountEditingController.text = '';
+    });
+    return true;
+  }
+
+  void _showMessage(String message, {bool isUndo: false}) {
+    final snackbar = SnackBar(
+      content: Text(message),
+      action: isUndo
+          ? SnackBarAction(
+              label: 'Undo',
+              onPressed: () {
+                // Some code to undo the change.
+              },
+            )
+          : null,
+    );
+    _globalKey.currentState!.showSnackBar(snackbar);
   }
 }

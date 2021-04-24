@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'transaction.dart';
 
 class TransactionList extends StatelessWidget {
@@ -16,24 +17,62 @@ class TransactionList extends StatelessWidget {
             ),
             color: (index % 2 == 0) ? Colors.blue : Colors.green,
             elevation: 10,
-            child: ListTile(
-              leading: const Icon(Icons.access_alarm),
-              title: Text(
-                transactions[index].content,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                  color: Colors.white,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(10),
                 ),
-              ),
-              subtitle: Text(
-                transactions[index].amount.toString(),
-                style: TextStyle(
-                  fontSize: 15,
-                  color: Colors.white,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(padding: EdgeInsets.only(top: 10)),
+                    Text(
+                      transactions[index].content.toUpperCase(),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Text(
+                      Intl()
+                          .date('yyyy/MM/dd')
+                          .format(transactions[index].createdAt),
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Padding(padding: EdgeInsets.only(top: 10)),
+                  ],
                 ),
-              ),
-              onTap: () {},
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(10),
+                        child: Text(
+                          '${transactions[index].amount.toString()}\$',
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.white,
+                          ),
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.white),
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(right: 10),
+                      )
+                    ],
+                  ),
+                ),
+              ],
             ),
           );
         });
