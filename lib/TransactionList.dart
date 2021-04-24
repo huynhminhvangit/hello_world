@@ -15,7 +15,7 @@ class TransactionList extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
-            color: (index % 2 == 0) ? Colors.blue : Colors.green,
+            color: (index % 2 == 0) ? Colors.purpleAccent : Colors.pinkAccent,
             elevation: 10,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -38,7 +38,7 @@ class TransactionList extends StatelessWidget {
                     ),
                     Text(
                       Intl()
-                          .date('yyyy/MM/dd')
+                          .date('yyyy/MM/dd HH:mm:ss')
                           .format(transactions[index].createdAt),
                       style: TextStyle(
                         fontSize: 15,
@@ -80,9 +80,6 @@ class TransactionList extends StatelessWidget {
 
   @override
   Widget build(Object context) {
-    return Container(
-      height: 500,
-      child: _buildListView(),
-    );
+    return _buildListView();
   }
 }

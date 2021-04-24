@@ -11,7 +11,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
-  final _globalKey = GlobalKey<ScaffoldMessengerState>();
   final _contentEditingController = new TextEditingController();
   final _amountEditingController = new TextEditingController();
 
@@ -22,57 +21,19 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      scaffoldMessengerKey: _globalKey,
-      title: 'Hello World App',
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text("BoBon"),
-          actions: [
-            IconButton(
-              icon: Icon(Icons.add),
-              onPressed: this._save,
-            )
-          ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Transaction management"),
+      ),
+      floatingActionButton: FloatingActionButton(
+        tooltip: 'Add transaction',
+        child: Icon(Icons.add),
+        onPressed: this._onButtonShowModalSheet,
+      ),
+      body: SafeArea(
+        child: Container(
+          child: TransactionList(transactions: _transactions),
         ),
-        floatingActionButton: FloatingActionButton(
-          tooltip: 'Add transaction',
-          child: Icon(Icons.add),
-          onPressed: this._save,
-        ),
-        body: SafeArea(
-            minimum: EdgeInsets.only(left: 20, right: 20),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextField(
-                    controller: _contentEditingController,
-                    decoration: InputDecoration(
-                      labelText: 'Content',
-                    ),
-                    onChanged: (value) {
-                      this.setState(() {
-                        _transaction.content = value;
-                      });
-                    },
-                  ),
-                  TextField(
-                    controller: _amountEditingController,
-                    decoration: InputDecoration(
-                      labelText: 'Amount(money)',
-                    ),
-                    onChanged: (value) {
-                      this.setState(() {
-                        _transaction.amount = double.tryParse(value) ?? 0;
-                      });
-                    },
-                  ),
-                  Padding(padding: EdgeInsets.symmetric(vertical: 10)),
-                  TransactionList(transactions: _transactions)
-                ],
-              ),
-            )),
       ),
     );
   }
@@ -80,10 +41,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void _save() {
     final result = this._addTransaction();
     if (!result) {
-      this._showMessage('Input invalid');
       return;
     }
-    this._showMessage('Saved successfully', isUndo: true);
   }
 
   bool _addTransaction() {
@@ -102,18 +61,73 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     return true;
   }
 
-  void _showMessage(String message, {bool isUndo: false}) {
-    final snackbar = SnackBar(
-      content: Text(message),
-      action: isUndo
-          ? SnackBarAction(
-              label: 'Undo',
-              onPressed: () {
-                // Some code to undo the change.
-              },
-            )
-          : null,
-    );
-    _globalKey.currentState!.showSnackBar(snackbar);
+  void _onButtonShowModalSheet() {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        context: this.context,
+        builder: (context) {
+          return Container(
+            padding: EdgeInsets.all(15),
+            child: Column(
+              children: [
+                TextField(
+                  controller: _contentEditingController,
+                  decoration: InputDecoration(
+                    labelText: 'Content',
+                  ),
+                  onChanged: (value) {
+                    this.setState(() {
+                      _transaction.content = value;
+                    });
+                  },
+                ),
+                TextField(
+                  controller: _amountEditingController,
+                  decoration: InputDecoration(
+                    labelText: 'Amount(money)',
+                  ),
+                  onChanged: (value) {
+                    this.setState(() {
+                      _transaction.amount = double.tryParse(value) ?? 0;
+                    });
+                  },
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 10),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextButton(
+                          onPressed: () {
+                            this._save();
+                            Navigator.pop(context);
+                          },
+                          child: Text('Save'),
+                          style: TextButton.styleFrom(
+                            primary: Colors.white,
+                            backgroundColor: Colors.blueAccent,
+                          ),
+                        ),
+                      ),
+                      Padding(padding: EdgeInsets.only(left: 10)),
+                      Expanded(
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text('Cancel'),
+                          style: TextButton.styleFrom(
+                            primary: Colors.white,
+                            backgroundColor: Colors.pinkAccent,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          );
+        });
   }
 }
